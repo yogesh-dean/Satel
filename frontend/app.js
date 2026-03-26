@@ -3,7 +3,7 @@
    Connects to FastAPI backend at http://localhost:8000
    ============================================================ */
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'https://satseg-backend.onrender.com';
 
 // ── Class config (colours must match image_processor.py BGR→RGB swap) ──────────
 const CLASS_CONFIG = [
