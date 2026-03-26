@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Virtual Environment
+venv/
+env/
+.env
+
+# Datasets (Too large for GitHub)
+train/
+valid/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Model files (uploading only the final .keras to GitHub is OK if <50MB)
+# If it's larger, use Git LFS or host elsewhere.
+# multiclass_unet.keras is ~3.4MB - OK.
