@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SatSeg — Satellite Image Segmentation</title>
+  <meta name="description" content="AI-powered satellite image semantic segmentation and land vulnerability analysis using U-Net." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Background -->
+<div class="grid-bg"></div>
+<div class="stars" id="stars"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="dot"></div>
+    SatSeg
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="active">Analyze</a>
+    <a href="about.html">About</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ── Hero ──────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-badge">🛰️ U-Net · Semantic Segmentation</div>
+    <h1>Satellite Image<br><span class="grad">Vulnerability Analysis</span></h1>
+    <p>Upload a satellite image and get instant AI-powered land-cover segmentation with drought, flood, and ecosystem vulnerability assessment.</p>
+
+    <!-- Upload Zone -->
+    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📡</div>
+      <h3>Drop your satellite image here</h3>
+      <p>Supports JPG and PNG · Recommended: _sat.jpg pairs</p>
+      <button class="btn btn-primary" onclick="document.getElementById('fileInput').click(); event.stopPropagation();">
+        📂 Choose Image
+      </button>
+      <input type="file" id="fileInput" accept=".jpg,.jpeg,.png" style="display:none;" />
+    </div>
+
+    <!-- Preview -->
+    <div class="preview-section" id="previewSection">
+      <div class="preview-card">
+        <div class="preview-card-header">
+          <span>📷 Uploaded Image</span>
+          <span id="previewFilename" style="color:var(--cyan);"></span>
+        </div>
+        <img id="previewImg" src="" alt="Preview" />
+        <div class="preview-actions">
+          <button class="btn btn-primary btn-lg" id="analyzeBtn" onclick="runAnalysis()">
+            🔍 Analyze Image
+          </button>
+          <button class="btn btn-ghost" onclick="resetAll()">✖ Clear</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Loader ────────────────────────────────────────────── -->
+  <section class="loader-section" id="loaderSection">
+    <div class="satellite-orbit"></div>
+    <p style="font-size:1.1rem;font-weight:600;">Processing Satellite Image…</p>
+    <div class="loader-step" id="loaderStep">Uploading image to server…</div>
+  </section>
+
+  <!-- ── Results ───────────────────────────────────────────── -->
+  <section class="results-section" id="resultsSection">
+    <h2 class="section-title">Segmentation <span>Results</span></h2>
+
+    <!-- Image Comparison -->
+    <div class="image-grid">
+      <div class="img-card">
+        <div class="img-card-label">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--text2);display:inline-block;"></span>
+          Original Image
+        </div>
+        <img id="origImg" src="" alt="Original" />
+      </div>
+      <div class="img-card">
+        <div class="img-card-label">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--cyan);display:inline-block;box-shadow:0 0 8px var(--cyan);"></span>
+          Segmented Mask
+        </div>
+        <img id="maskImg" src="" alt="Segmented" />
+      </div>
+    </div>
+
+    <!-- Class Distribution -->
+    <div class="stats-card">
+      <h3>Land Cover Distribution</h3>
+      <div id="classBars"></div>
+    </div>
+
+    <!-- Vulnerability Cards -->
+    <h2 class="section-title" style="margin-bottom:20px;">
+      Environmental <span>Vulnerability</span>
+    </h2>
+    <div class="vuln-grid" id="vulnGrid"></div>
+
+    <!-- Final Banner -->
+    <div class="final-banner" id="finalBanner">
+      <div class="banner-label">Final Risk Assessment</div>
+      <div class="banner-status" id="bannerStatus">—</div>
+    </div>
+
+    <div class="reset-wrap">
+      <button class="btn btn-secondary" onclick="resetAll()">↩ Analyze Another Image</button>
+    </div>
+  </section>
+
+</div><!-- end page-wrap -->
+
+<footer>
+  <span>SatSeg — Satellite Semantic Segmentation</span>
+</footer>
+
+<script src="app.js"></script>
+<script>
+  // Generate random stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 120; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left  = Math.random() * 100 + '%';
+    s.style.top   = Math.random() * 100 + '%';
+    s.style.animationDelay = (Math.random() * 4) + 's';
+    s.style.animationDuration = (2 + Math.random() * 4) + 's';
+    s.style.opacity = Math.random() * 0.6;
+    starsEl.appendChild(s);
+  }
+</script>
+
+</body>
+</html>

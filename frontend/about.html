@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — SatSeg</title>
+  <meta name="description" content="About the SatSeg satellite image segmentation project — architecture, pipeline, and class legend." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="grid-bg"></div>
+<div class="stars" id="stars"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="dot"></div>
+    SatSeg
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Analyze</a>
+    <a href="about.html" class="active">About</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ── About Hero ─────────────────────────────────────────── -->
+  <section class="about-hero" style="animation: fadeUp 0.6s ease both;">
+    <div class="hero-badge" style="margin-bottom:20px;">🌍 Mini Project · Satellite AI</div>
+    <h1>About <span class="grad">SatSeg</span></h1>
+    <p>
+      SatSeg is an AI-powered satellite image analysis system that performs pixel-level semantic segmentation using a custom U-Net architecture, classifying land into 6 environmental categories and performing automated vulnerability risk assessment.
+    </p>
+  </section>
+
+  <!-- ── Feature Cards ──────────────────────────────────────── -->
+  <div class="about-grid">
+    <div class="about-card" style="animation: fadeUp 0.5s 0.1s ease both;">
+      <div class="about-card-icon">🧠</div>
+      <h3>U-Net Architecture</h3>
+      <p>Encoder–decoder with skip connections for pixel-level accuracy. Trained on 128×128 satellite patches with weighted categorical cross-entropy loss to handle class imbalance.</p>
+    </div>
+    <div class="about-card" style="animation: fadeUp 0.5s 0.2s ease both;">
+      <div class="about-card-icon">🎨</div>
+      <h3>RGB Mask Encoding</h3>
+      <p>Ground-truth masks use distinct RGB colours per class. A threshold-based decoder converts colour → integer class labels (0–5) during preprocessing.</p>
+    </div>
+    <div class="about-card" style="animation: fadeUp 0.5s 0.3s ease both;">
+      <div class="about-card-icon">⚖️</div>
+      <h3>Weighted Loss</h3>
+      <p>Class weights [0.5, 2.0, 1.0, 0.7, 1.2, 1.5] emphasise rare classes (Water, Urban) to counter the dominant vegetation bias in the dataset.</p>
+    </div>
+    <div class="about-card" style="animation: fadeUp 0.5s 0.4s ease both;">
+      <div class="about-card-icon">⚡</div>
+      <h3>FastAPI Backend</h3>
+      <p>RESTful API with 5 endpoints. Accepts satellite image uploads, runs TensorFlow inference, computes vulnerability metrics, and returns a Base64 PNG segmentation mask.</p>
+    </div>
+  </div>
+
+  <!-- ── Detailed Vulnerability Methodology ────────────────── -->
+  <section class="pipeline" style="margin-top: 60px;">
+    <h2>Vulnerability <span class="grad">Methodology</span></h2>
+    <div class="about-card" style="margin-bottom: 20px; border-color: rgba(248,113,113,0.3);">
+        <h4>🏜️ Drought Vulnerability</h4>
+        <p style="margin-top: 10px; font-size: 0.9rem;">Calculated by correlating <strong>Dry Land</strong> percentage against <strong>Total Vegetation</strong>. A high drought risk (Dry > 50%, Veg < 30%) indicates a critical lack of soil moisture and vegetation health, leading to potential land degradation and loss of agricultural productivity.</p>
+    </div>
+    <div class="about-card" style="margin-bottom: 20px; border-color: rgba(96,165,250,0.3);">
+        <h4>🌊 Flood Vulnerability</h4>
+        <p style="margin-top: 10px; font-size: 0.9rem;">Determined by <strong>Water Body</strong> surface area in relation to <strong>Natural Absorption</strong> (vegetation cover). Areas with over 40% water coverage and low vegetation are flagged as high risk, as the lack of green cover significantly reduces the land's ability to absorb excess moisture during heavy rainfall.</p>
+    </div>
+    <div class="about-card" style="margin-bottom: 20px; border-color: rgba(52,211,153,0.3);">
+        <h4>🌱 Ecosystem Resilience</h4>
+        <p style="margin-top: 10px; font-size: 0.9rem;">Assessed via <strong>Total Biomass</strong> (Dense + Light Vegetation). A healthy ecosystem (>70% cover) provides essential services like carbon sequestration, local climate regulation, and soil stabilization. Coverage below 40% is considered poor, indicating a fragmented and vulnerable habitat.</p>
+    </div>
+    <div class="about-card" style="margin-bottom: 20px; border-color: rgba(168,85,247,0.3);">
+        <h4>🏙️ Urban Environmental Stress</h4>
+        <p style="margin-top: 10px; font-size: 0.9rem;">Measured by <strong>Impervious Surface</strong> (Urban) density. High urban concentration (>30%) causes "Heat Island" effects and disrupts natural water cycles. Monitoring urban stress is vital for sustainable city planning and temperature mitigation strategies.</p>
+    </div>
+  </section>
+    <div class="about-card" style="animation: fadeUp 0.5s 0.5s ease both;">
+      <div class="about-card-icon">🛡️</div>
+      <h3>5-Module Risk Engine</h3>
+      <p>Drought, Flood, Ecosystem Health, Urban Stress — each independently scored with thresholds, combined into a final environmental vulnerability status.</p>
+    </div>
+    <div class="about-card" style="animation: fadeUp 0.5s 0.6s ease both;">
+      <div class="about-card-icon">📊</div>
+      <h3>Pixel-Level Analysis</h3>
+      <p>Every pixel in the 128×128 output is assigned a class. Coverage percentages are computed and fed directly into the vulnerability rule engine.</p>
+    </div>
+  </div>
+
+  <!-- ── Pipeline ───────────────────────────────────────────── -->
+  <section class="pipeline">
+    <h2>Processing <span class="grad">Pipeline</span></h2>
+    <div class="pipeline-step" style="animation-delay:0.1s">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Image Upload</h4>
+        <p>Satellite image (JPG/PNG) uploaded via browser → validated and sent to the FastAPI backend.</p>
+      </div>
+    </div>
+    <div class="pipeline-step" style="animation-delay:0.2s">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Preprocessing</h4>
+        <p>Decoded as BGR, resized to 128×128, normalised: <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:0.8rem;">(img − mean) / (std + 1e-7)</code></p>
+      </div>
+    </div>
+    <div class="pipeline-step" style="animation-delay:0.3s">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>U-Net Inference</h4>
+        <p>Model outputs (128, 128, 6) softmax probabilities. <code style="background:var(--bg3);padding:2px 6px;border-radius:4px;font-size:0.8rem;">argmax</code> across axis-2 → class map (0–5).</p>
+      </div>
+    </div>
+    <div class="pipeline-step" style="animation-delay:0.4s">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>Colour Mapping</h4>
+        <p>Class map coloured by palette → resized to 800×800 (INTER_NEAREST) → PNG → Base64.</p>
+      </div>
+    </div>
+    <div class="pipeline-step" style="animation-delay:0.5s">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h4>Vulnerability Analysis</h4>
+        <p>Pixel percentages calculated per class → fed into 5-module rule engine → final risk status returned.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Class Legend ────────────────────────────────────────── -->
+  <section class="class-legend">
+    <h2>Class <span class="grad">Legend</span></h2>
+    <div class="legend-grid">
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:#fff;border:1px solid #444;"></div>
+        <div class="legend-info"><span>Background</span><small>Roads &amp; bare ground</small></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:#0000ff;"></div>
+        <div class="legend-info"><span>Water</span><small>Rivers, lakes, ponds</small></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:#00ff00;"></div>
+        <div class="legend-info"><span>Dense Vegetation</span><small>Forests, thick crops</small></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:#ffff00;"></div>
+        <div class="legend-info"><span>Light Vegetation</span><small>Shrubs, light crops</small></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:#ff00ff;"></div>
+        <div class="legend-info"><span>Dry Land</span><small>Arid, barren soil</small></div>
+      </div>
+      <div class="legend-item">
+        <div class="legend-swatch" style="background:#00ffff;"></div>
+        <div class="legend-info"><span>Urban</span><small>Buildings, impervious</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Tech Stack ─────────────────────────────────────────── -->
+  <section style="text-align:center;padding-bottom:16px;">
+    <h2 style="font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;margin-bottom:28px;">
+      Tech <span class="grad">Stack</span>
+    </h2>
+  </section>
+  <div class="tech-row">
+    <span class="tech-badge">🐍 Python 3.11</span>
+    <span class="tech-badge">⚡ FastAPI</span>
+    <span class="tech-badge">🧠 TensorFlow / Keras</span>
+    <span class="tech-badge">🔬 U-Net</span>
+    <span class="tech-badge">📷 OpenCV</span>
+    <span class="tech-badge">🔢 NumPy</span>
+    <span class="tech-badge">🎨 Vanilla CSS</span>
+    <span class="tech-badge">📡 REST API</span>
+  </div>
+
+</div><!-- end page-wrap -->
+
+<footer>
+  <span>SatSeg — Satellite Semantic Segmentation</span>
+</footer>
+
+<script>
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 100; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left  = Math.random() * 100 + '%';
+    s.style.top   = Math.random() * 100 + '%';
+    s.style.animationDelay = (Math.random() * 4) + 's';
+    s.style.animationDuration = (2 + Math.random() * 4) + 's';
+    s.style.opacity = Math.random() * 0.6;
+    starsEl.appendChild(s);
+  }
+</script>
+
+</body>
+</html>
